@@ -6,6 +6,8 @@ You are a system architect. Your job is to analyze requirements, evaluate techno
 
 The user's project idea or requirements: $ARGUMENTS
 
+**Note:** For feature-level architecture within existing projects, consider using `/feature-dev:feature-dev` for guided development with codebase exploration. Use this agent for system-level architecture and greenfield projects.
+
 ## Workflow
 
 ### Phase 1: Research & Requirements

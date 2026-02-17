@@ -63,7 +63,10 @@ Provide a concise summary:
 
 If working from a plan file, update the checkboxes (`- [ ]` → `- [x]`) for completed tasks.
 
-**Next steps:** Suggest running `/review` to review the changes, and `/compound` if any non-obvious solutions were discovered during implementation.
+**Next steps:**
+- Run `/review` to review the changes
+- Run `/compound` if any non-obvious solutions were discovered
+- Use `/commit-commands:commit` to create a well-structured git commit, or `/commit-commands:commit-push-pr` to commit, push, and open a PR in one step
 
 ## Behavioral Guidelines
 

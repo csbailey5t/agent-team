@@ -20,6 +20,22 @@ A collection of reusable Claude Code slash commands that act as specialized agen
 
 Supporting agents: `/scaffold`, `/test`, `/debug`, `/docs`, `/devops`
 
+## Integrated Plugins
+
+The agent team is enhanced by official Anthropic plugins:
+- **commit-commands** — Git workflows (commit, push, PR creation)
+- **pr-review-toolkit** — Multi-agent PR reviews
+- **feature-dev** — Guided feature development with codebase exploration
+- **code-simplifier** — Refactoring for clarity
+- **security-guidance** — Proactive security warnings
+- **explanatory-output-style** — Educational insights
+- **linear** — Issue tracking integration
+- **github** — GitHub repository integration
+- **playwright** — Browser E2E testing
+- **typescript-lsp** & **pyright-lsp** — Language intelligence
+
+See PLUGINS.md for installation instructions.
+
 ## Knowledge Accumulation
 
 Agents search `docs/solutions/` before starting work. After solving non-trivial problems, `/compound` documents the solution. This creates a searchable knowledge base that grows with the project.

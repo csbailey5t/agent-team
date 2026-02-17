@@ -8,6 +8,8 @@ This is different from `/architect` (which designs systems) and `/spec` (which d
 
 What to plan: $ARGUMENTS
 
+**Note:** For complex features that need deep codebase exploration and architecture focus, consider using `/feature-dev:feature-dev` which provides guided feature development with specialized agents. Use this agent when you want more control over the planning process or are working with an established plan template.
+
 ## Workflow
 
 ### Phase 1: Research

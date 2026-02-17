@@ -8,6 +8,8 @@ What to review: $ARGUMENTS
 
 If $ARGUMENTS is empty, review staged git changes (`git diff --cached`). If nothing is staged, review unstaged changes (`git diff`).
 
+**Note:** For reviewing pull requests specifically, consider using the `/pr-review-toolkit:review-pr` skill, which provides specialized PR review agents with confidence scoring. Use this agent for general code review or when you want to customize the review perspectives.
+
 ## Workflow
 
 ### Phase 1: Gather the Changes

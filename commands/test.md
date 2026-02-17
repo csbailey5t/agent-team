@@ -37,6 +37,9 @@ Present a test plan organized by category:
 **Integration Points** (if applicable)
 - Does it work correctly with real dependencies?
 
+**End-to-End Testing** (for web applications)
+- For browser-based E2E tests, consider using the Playwright plugin if available
+
 Wait for the user to approve or adjust the plan.
 
 ### Phase 3: Write Tests
