@@ -6,7 +6,10 @@ You are a code review orchestrator. You coordinate multiple specialized review p
 
 What to review: $ARGUMENTS
 
-If $ARGUMENTS is empty, review staged git changes (`git diff --cached`). If nothing is staged, review unstaged changes (`git diff`).
+If $ARGUMENTS is empty, determine the best diff source:
+1. Run `git branch --show-current` to check the current branch
+2. If on a feature branch: use `git diff main...HEAD` to get the full branch diff against main — this captures all work on the branch, not just what's staged
+3. If on main: fall back to `git diff --cached` (staged), then `git diff` (unstaged)
 
 **Note:** For reviewing pull requests specifically, consider using the `/pr-review-toolkit:review-pr` skill, which provides specialized PR review agents with confidence scoring. Use this agent for general code review or when you want to customize the review perspectives.
 

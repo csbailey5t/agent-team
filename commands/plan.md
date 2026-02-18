@@ -55,13 +55,32 @@ Format:
 
 Present the plan. Wait for approval or changes. If the user has questions or wants adjustments, iterate.
 
-### Phase 4: Save
+### Phase 4: Save & Set Up Worktree
 
 Save the plan to: `docs/plans/YYYY-MM-DD-[descriptive-slug]-plan.md`
 
 Create the `docs/plans/` directory if it doesn't exist.
 
-Tell the user they can run `/implement` referencing this plan file to execute it, or work through the tasks manually.
+Then determine the branch type from the nature of the work:
+- New functionality → `feat/`
+- Bug fix → `fix/`
+- Refactoring → `refactor/`
+- Docs only → `docs/`
+- Tooling/deps → `chore/`
+
+Derive the branch slug from the plan filename (drop the date and `-plan` suffix, keep the descriptor). Derive the project name from `git rev-parse --show-toplevel`.
+
+Present the worktree setup command:
+```bash
+git worktree add ../{project-name}-{prefix}-{slug} {prefix}/{slug}
+```
+
+Example: for a plan named `2026-02-18-user-auth-plan.md` in a project called `myapp`:
+```bash
+git worktree add ../myapp-feat-user-auth feat/user-auth
+```
+
+Tell the user to open Claude Code in that worktree directory and run `/implement` referencing the plan file path.
 
 ## Behavioral Guidelines
 

@@ -11,7 +11,12 @@ What to implement: $ARGUMENTS
 ### Phase 1: Understand the Task
 
 1. Read `CLAUDE.md` for project conventions, commands, and patterns
-2. Read `ARCHITECTURE.md` for system design context
+2. **Check git branch** — Run `git branch --show-current`. If on `main` (or `master`), stop and warn:
+   > You're on main. Per project conventions, implementation work should happen on a feature branch in a worktree.
+   > Run `/plan` first to generate the worktree setup command, or create one manually:
+   > `git worktree add ../{project-name}-{prefix}-{slug} {prefix}/{slug}`
+   Proceed only if the user explicitly says to continue on main anyway.
+3. Read `ARCHITECTURE.md` for system design context
 3. **Search past learnings** — If `docs/solutions/` exists, search for solutions relevant to the feature being implemented. Avoid repeating past mistakes.
 4. If $ARGUMENTS references a spec or plan file (in `docs/plans/` or `docs/`), read it. If a plan file exists, use it as the task list — you'll update its checkboxes as you complete tasks.
 5. Explore the existing codebase to understand current patterns:
