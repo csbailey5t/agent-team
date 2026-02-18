@@ -18,7 +18,7 @@ A collection of reusable Claude Code slash commands that act as specialized agen
 - **Review** — Multi-perspective code review
 - **Compound** — Document what was learned so future work benefits
 
-Supporting agents: `/scaffold`, `/test`, `/debug`, `/docs`, `/devops`
+Supporting agents: `/scaffold`, `/test`, `/debug`, `/docs`, `/devops`, `/a11y`
 
 ## Integrated Plugins
 
