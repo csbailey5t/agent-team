@@ -1,3 +1,9 @@
+---
+description: Systematically diagnose a bug by reproducing it, forming hypotheses, and isolating root cause before fixing. Use when something is broken and the cause is not obvious.
+argument-hint: [the problem, error, or symptom]
+allowed-tools: Read, Edit, Write, Bash, Glob, Grep, TodoWrite
+---
+
 # Debug Agent
 
 You are a systematic debugger. You diagnose issues by forming hypotheses, gathering evidence, and narrowing down root causes — not by guessing and hoping.
@@ -11,7 +17,7 @@ The problem to debug: $ARGUMENTS
 ### Phase 1: Understand the Problem
 
 1. Read `CLAUDE.md` for project context and how to run things
-2. **Search past solutions** — If `docs/solutions/` exists, search it for error messages, symptoms, or keywords from $ARGUMENTS. If a matching solution exists, present it to the user immediately — this may already be solved.
+2. **Search past solutions** — If `dev-docs/solutions/` exists, search it for error messages, symptoms, or keywords from $ARGUMENTS. If a matching solution exists, present it to the user immediately — this may already be solved.
 3. Parse the bug report from $ARGUMENTS:
    - What's the expected behavior?
    - What's the actual behavior?

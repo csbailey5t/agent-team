@@ -85,23 +85,36 @@ git worktree remove ../project-name-feat-user-auth
 
 ## Knowledge Accumulation
 
-Agents search `docs/solutions/` before starting work. After solving non-trivial problems, `/compound` documents the solution. This creates a searchable knowledge base that grows with the project.
+Learnings compound only if future work actually retrieves them, so `/compound` captures them in **three tiers by durability**:
+
+1. **Tier 1 — `dev-docs/solutions/`** — a full, searchable case file for every learning. Agents grep it before starting work. Best for the long tail of specific issues.
+2. **Tier 2 — `.claude/rules/`** — a short guardrail with a `paths:` glob, for recurring/preventable mistakes tied to a kind of file. These load **automatically** when matching files are edited, so retrieval doesn't depend on anyone remembering to search.
+3. **Tier 3 — `CLAUDE.md`** — a one-line rule for universal, project-wide constraints.
+
+Default is Tier 1. Promotion to always-on context (Tier 2/3) must earn its place: `/compound` runs a baseline subagent that has to *actually make the mistake* without the rule before the rule is kept (test-driven documentation). This keeps always-loaded context lean.
 
 ## Project Structure
 
-- `commands/` — Slash command markdown files (the agents)
+- `commands/` — Slash command markdown files (the agents), each with YAML frontmatter
 - `install.sh` — Symlinks commands to `~/.claude/commands/` for global access
 - Each `.md` file in `commands/` becomes a `/command-name` in Claude Code
+- `dev-docs/` — visible, committed workflow artifacts (per-project): `solutions/` (Tier 1 knowledge base), `plans/`, `brainstorms/`, `specs/`. Kept out of `docs/` so it never collides with a project's published docs site.
+- `.claude/rules/` — Tier 2 auto-loading guardrails (per-project, promoted by `/compound`). **Commit these** — gitignore only `.claude/settings.local.json`, never all of `.claude/`, or rules won't travel with the repo.
 
 ## Editing Agents
 
 When modifying agent commands:
+- **Every agent starts with YAML frontmatter** (see any file in `commands/`):
+  - `description` — written as *what it does + when to use it* (a trigger, not a summary). This is what lets Claude Code surface and auto-select the agent, not just respond to a typed slash command. Keep it one or two sentences.
+  - `argument-hint` — the shape of `$ARGUMENTS`, shown during autocomplete.
+  - `allowed-tools` — restrict tools where it adds safety (e.g. `/review` has no `Write`/`Edit` — it reviews, it never mutates). **Omit** this field for agents that need the full toolset or MCP/Playwright tools (`/implement`, `/test`, `/a11y`, `/debug`).
+  - `model` — set `opus` for design/planning altitude (`/architect`, `/plan`, `/spec`), `haiku` for templated capture (`/compound`, `/docs`, `/scaffold`). **Omit** it elsewhere so the agent inherits the session model — don't override unless there's a clear reason.
 - Each agent has: a role description, a phased workflow, and behavioral guidelines
 - All agents use `$ARGUMENTS` for input from the user
 - Agents are collaborative — they present options and wait for confirmation at key decision points
 - Keep workflows to 4-6 phases max
 - Every agent should produce a concrete output (files, reports, code), not just advice
-- Planning agents save artifacts to `docs/plans/`
+- Planning agents save artifacts to `dev-docs/plans/`
 - Agents that solve problems should suggest `/compound`
 
 ## Installing

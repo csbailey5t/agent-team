@@ -17,11 +17,11 @@ Traditional development accumulates technical debt. This system inverts that: so
 ### Core Loop
 
 1. **`/brainstorm`** — Explore *what* to build through one-question-at-a-time dialogue. Presents 2-3 approaches with tradeoffs.
-2. **`/architect`** — Design the system. Tech stack evaluation, component breakdown, data model, API surface. Saves to `docs/plans/`.
-3. **`/plan`** — Detailed implementation planning. Searches past learnings, produces ordered task checklists. Saves to `docs/plans/`.
+2. **`/architect`** — Design the system. Tech stack evaluation, component breakdown, data model, API surface. Saves to `dev-docs/plans/`.
+3. **`/plan`** — Detailed implementation planning. Searches past learnings, produces ordered task checklists. Saves to `dev-docs/plans/`.
 4. **`/implement`** — Write the code. Reads plan files, updates checkboxes, follows patterns. Suggests `/review` after.
 5. **`/review`** — Multi-perspective code review. Spawns parallel sub-agents for correctness, security, simplicity, performance, testing.
-6. **`/compound`** — **The money step.** Document what was learned. Saves solutions to `docs/solutions/[category]/` with structured metadata.
+6. **`/compound`** — **The money step.** Document what was learned. Saves solutions to `dev-docs/solutions/[category]/` with structured metadata.
 
 ### Supporting Agents
 
@@ -36,7 +36,7 @@ Traditional development accumulates technical debt. This system inverts that: so
 
 The compounding loop is real, not metaphorical:
 
-- Every `/plan`, `/architect`, `/debug`, and `/implement` searches `docs/solutions/` before starting
+- Every `/plan`, `/architect`, `/debug`, and `/implement` searches `dev-docs/solutions/` before starting
 - Every problem solved via `/compound` feeds back as searchable knowledge
 - The system literally gets smarter with every bug fix
 
@@ -100,7 +100,7 @@ pip install pyright
 /plan the sync command
 # ... detailed implementation plan ...
 
-/implement docs/plans/2026-02-16-sync-command-plan.md
+/implement dev-docs/plans/2026-02-16-sync-command-plan.md
 # ... write the code ...
 
 /review
@@ -114,9 +114,9 @@ pip install pyright
 
 ```bash
 /plan user authentication with OAuth
-# ... detailed plan saved to docs/plans/ ...
+# ... detailed plan saved to dev-docs/plans/ ...
 
-/implement docs/plans/2026-02-16-oauth-auth-plan.md
+/implement dev-docs/plans/2026-02-16-oauth-auth-plan.md
 # ... code written, tests added ...
 
 /review
@@ -169,7 +169,7 @@ your-project/
 - Same core insight: knowledge should compound
 
 **vs. Ad-hoc Claude Code usage:**
-- Knowledge persists across sessions (`docs/solutions/`)
+- Knowledge persists across sessions (`dev-docs/solutions/`)
 - Workflow is explicit and repeatable
 - Each step has clear outputs and next steps
 - Quality bar is higher (multi-perspective reviews)
@@ -183,10 +183,10 @@ your-project/
 
 ### Custom Plan Templates
 
-Save your own plan templates to `docs/plans/templates/` and reference them:
+Save your own plan templates to `dev-docs/plans/templates/` and reference them:
 
 ```bash
-/plan docs/plans/templates/api-endpoint-template.md
+/plan dev-docs/plans/templates/api-endpoint-template.md
 ```
 
 ### Integration with Linear
@@ -206,7 +206,7 @@ Track the workflow loop as Linear issues:
 Use the commit-commands plugin after implementation:
 
 ```bash
-/implement docs/plans/2026-02-16-feature-plan.md
+/implement dev-docs/plans/2026-02-16-feature-plan.md
 # ... code written ...
 
 /commit-commands:commit-push-pr
@@ -233,8 +233,8 @@ From Every's Compound Engineering methodology:
 > "Each unit of engineering work should make subsequent units of work easier — not harder."
 
 This agent team makes that real through:
-1. **Searchable knowledge base** (`docs/solutions/`)
-2. **Planning as primary artifact** (`docs/plans/`)
+1. **Searchable knowledge base** (`dev-docs/solutions/`)
+2. **Planning as primary artifact** (`dev-docs/plans/`)
 3. **Multi-perspective quality** (parallel review agents)
 4. **Explicit workflow** (brainstorm → plan → implement → review → compound)
 

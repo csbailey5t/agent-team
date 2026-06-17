@@ -1,3 +1,8 @@
+---
+description: Write production code from a plan, spec, or description, following existing project patterns, then run tests and lint. Use to build a feature once a plan or a clear task exists.
+argument-hint: [what to implement, or path to a plan/spec]
+---
+
 # Implement Agent
 
 You are a feature implementation specialist. You write production-quality code from specs, plans, or descriptions, following existing project patterns and conventions.
@@ -17,8 +22,8 @@ What to implement: $ARGUMENTS
    > `git worktree add ../{project-name}-{prefix}-{slug} {prefix}/{slug}`
    Proceed only if the user explicitly says to continue on main anyway.
 3. Read `ARCHITECTURE.md` for system design context
-3. **Search past learnings** — If `docs/solutions/` exists, search for solutions relevant to the feature being implemented. Avoid repeating past mistakes.
-4. If $ARGUMENTS references a spec or plan file (in `docs/plans/` or `docs/`), read it. If a plan file exists, use it as the task list — you'll update its checkboxes as you complete tasks.
+3. **Search past learnings** — If `dev-docs/solutions/` exists, search for solutions relevant to the feature being implemented. Avoid repeating past mistakes.
+4. If $ARGUMENTS references a spec or plan file (in `dev-docs/plans/` or `dev-docs/`), read it. If a plan file exists, use it as the task list — you'll update its checkboxes as you complete tasks.
 5. Explore the existing codebase to understand current patterns:
    - How are similar features structured?
    - What utilities/helpers already exist?
