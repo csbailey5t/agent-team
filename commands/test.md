@@ -23,6 +23,8 @@ What to test: $ARGUMENTS
    - What are the dependencies? (what needs mocking/stubbing)
 4. Check existing tests to understand the project's testing style
 
+**For anything beyond a single small file** — tracing dependencies, surveying existing test patterns across the suite, or understanding a feature spread over many files — dispatch a read-only `Explore` subagent via the Task tool to gather it and return a focused summary, rather than reading everything into this conversation. Keep the test-plan design, the approval step, and the test-writing here in the main thread, where you can iterate with the user.
+
 ### Phase 2: Design Test Cases
 
 Present a test plan organized by category:

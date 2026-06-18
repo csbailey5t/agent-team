@@ -21,7 +21,7 @@ Traditional development accumulates technical debt. This system inverts that: so
 3. **`/plan`** — Detailed implementation planning. Searches past learnings, produces ordered task checklists. Saves to `dev-docs/plans/`.
 4. **`/implement`** — Write the code. Reads plan files, updates checkboxes, follows patterns. Suggests `/review` after.
 5. **`/review`** — Multi-perspective code review. Spawns parallel sub-agents for correctness, security, simplicity, performance, testing.
-6. **`/compound`** — **The money step.** Document what was learned. Saves solutions to `dev-docs/solutions/[category]/` with structured metadata.
+6. **`/compound`** — **The money step.** Capture what was learned as a searchable solution doc in `dev-docs/solutions/`, and promote recurring, preventable lessons into auto-loading `.claude/rules/` (or `CLAUDE.md`) so future work retrieves them automatically.
 
 ### Supporting Agents
 
@@ -31,14 +31,17 @@ Traditional development accumulates technical debt. This system inverts that: so
 - **`/debug`** — Systematic debugging with hypothesis testing
 - **`/docs`** — Generate README, API docs, guides
 - **`/devops`** — CI/CD, Docker, deployment configs
+- **`/a11y`** — Accessibility audit (WCAG 2.1 AA). A thin command that delegates to an isolated `a11y-auditor` subagent and returns a prioritized remediation roadmap
 
 ## Knowledge Accumulation
 
-The compounding loop is real, not metaphorical:
+The compounding loop is real, not metaphorical. `/compound` captures learnings in **three tiers by durability**, so retrieval doesn't depend on anyone remembering to search:
 
-- Every `/plan`, `/architect`, `/debug`, and `/implement` searches `dev-docs/solutions/` before starting
-- Every problem solved via `/compound` feeds back as searchable knowledge
-- The system literally gets smarter with every bug fix
+- **Tier 1 — `dev-docs/solutions/`**: a searchable case file for every learning. `/plan`, `/architect`, `/debug`, and `/implement` grep it before starting.
+- **Tier 2 — `.claude/rules/`**: short guardrails with `paths:` globs that load *automatically* when matching files are edited — for recurring, preventable mistakes.
+- **Tier 3 — `CLAUDE.md`**: one-line rules for universal, project-wide constraints.
+
+Promotion to always-on context (Tier 2/3) is gated by a baseline check: `/compound` confirms an agent actually makes the mistake *without* the rule before keeping it. The system gets smarter with every bug fix.
 
 ## Installation
 
@@ -50,7 +53,7 @@ cd agent-team
 ./install.sh
 ```
 
-This symlinks all commands to `~/.claude/commands/` so they're globally available.
+This symlinks slash commands to `~/.claude/commands/` and subagents to `~/.claude/agents/` so they're globally available.
 
 ### 2. Install the Plugins (Optional but Recommended)
 
@@ -142,10 +145,13 @@ pip install pyright
 your-project/
 ├── CLAUDE.md                    # Project conventions (created by /architect or /scaffold)
 ├── ARCHITECTURE.md              # System design (created by /architect)
-├── docs/
+├── .claude/
+│   └── rules/                   # Tier 2 auto-loading guardrails (/compound)
+├── dev-docs/                    # Visible, committed workflow artifacts (kept out of docs/)
 │   ├── brainstorms/             # Exploration sessions (/brainstorm)
 │   ├── plans/                   # Implementation plans (/plan, /architect)
-│   └── solutions/               # Searchable learnings (/compound)
+│   ├── specs/                   # Feature specs (/spec)
+│   └── solutions/               # Tier 1 searchable learnings (/compound)
 │       ├── build-errors/
 │       ├── test-failures/
 │       ├── runtime-errors/
@@ -160,10 +166,12 @@ your-project/
 └── [your code]
 ```
 
+> Artifacts live in `dev-docs/` (not `docs/`) so they never collide with a published docs site. Gitignore only `.claude/settings.local.json` — never all of `.claude/` — so shared rules travel with the repo.
+
 ## How It Differs from Other Workflows
 
 **vs. Compound Engineering Plugin:**
-- Simpler (12 agents vs. 29 agents + 22 commands + 19 skills)
+- Simpler (13 slash commands + a focused subagent vs. 29 agents + 22 commands + 19 skills)
 - Tech-agnostic (not Rails-specific)
 - Lower ceremony (use any agent independently)
 - Same core insight: knowledge should compound
@@ -215,16 +223,16 @@ Use the commit-commands plugin after implementation:
 
 ## Editing Agents
 
-All agent source files are in `commands/`. Edit them to customize behavior:
+Agent source files live in two places: slash commands in `commands/` and subagents in `agents/`. Edit them to customize behavior:
 
 ```bash
 cd agent-team
-vim commands/review.md
-# ... make changes ...
-# Changes take effect immediately (symlinked to ~/.claude/commands/)
+vim commands/review.md      # a slash command (runs inline)
+vim agents/a11y-auditor.md  # a subagent (runs in isolated context)
+# Changes take effect immediately (symlinked to ~/.claude/)
 ```
 
-See [CLAUDE.md](CLAUDE.md) for agent design principles.
+Slash commands run inline in your conversation; subagents run in isolated context and return a summary. See [CLAUDE.md](CLAUDE.md) for the design principles and when to use which.
 
 ## Philosophy
 

@@ -1,7 +1,7 @@
 ---
 description: Systematically diagnose a bug by reproducing it, forming hypotheses, and isolating root cause before fixing. Use when something is broken and the cause is not obvious.
 argument-hint: [the problem, error, or symptom]
-allowed-tools: Read, Edit, Write, Bash, Glob, Grep, TodoWrite
+allowed-tools: Read, Edit, Write, Bash, Glob, Grep, TodoWrite, Task
 ---
 
 # Debug Agent
@@ -37,6 +37,8 @@ Try to reproduce the issue:
 ### Phase 3: Investigate
 
 Form hypotheses and test them systematically:
+
+**For wide codebase tracing** — following data flow across many files, finding every call site, mapping where something is defined and used — dispatch a read-only `Explore` subagent via the Task tool and ask it to return a focused summary of the relevant code paths. This keeps verbose file reads out of this conversation so your debugging context stays sharp. Do the hypothesis-forming, the fix, and the verification here in the main thread — those need your judgment and the user's approval, which a subagent can't provide.
 
 1. **Read the error** — Stack traces point to specific locations. Start there.
 2. **Trace the data flow** — Follow the input from entry point to failure point

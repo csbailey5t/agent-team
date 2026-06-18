@@ -2,53 +2,59 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-COMMANDS_SRC="$SCRIPT_DIR/commands"
-COMMANDS_DST="$HOME/.claude/commands"
 
-echo "Installing agent-team commands..."
+# Symlink every *.md in $1 (source dir) into $2 (dest dir), backing up any
+# pre-existing regular files. Echoes a per-directory summary.
+install_dir() {
+  local src="$1" dst="$2" label="$3"
+  [ -d "$src" ] || return 0
 
-# Create target directory if it doesn't exist
-mkdir -p "$COMMANDS_DST"
+  mkdir -p "$dst"
+  local installed=0 updated=0 skipped=0
 
-# Track what we do
-installed=0
-updated=0
-skipped=0
+  for file in "$src"/*.md; do
+    [ -e "$file" ] || continue
+    local filename target current_target
+    filename="$(basename "$file")"
+    target="$dst/$filename"
 
-for cmd_file in "$COMMANDS_SRC"/*.md; do
-  filename="$(basename "$cmd_file")"
-  target="$COMMANDS_DST/$filename"
-
-  if [ -L "$target" ]; then
-    # Already a symlink — check if it points to us
-    current_target="$(readlink "$target")"
-    if [ "$current_target" = "$cmd_file" ]; then
-      ((skipped++))
-      continue
+    if [ -L "$target" ]; then
+      current_target="$(readlink "$target")"
+      if [ "$current_target" = "$file" ]; then
+        ((skipped++)); continue
+      fi
+      ln -sf "$file" "$target"; ((updated++))
+    elif [ -f "$target" ]; then
+      echo "  Backing up existing $filename → ${filename}.bak"
+      mv "$target" "${target}.bak"
+      ln -s "$file" "$target"; ((updated++))
+    else
+      ln -s "$file" "$target"; ((installed++))
     fi
-    # Points elsewhere — update it
-    ln -sf "$cmd_file" "$target"
-    ((updated++))
-  elif [ -f "$target" ]; then
-    # Regular file exists — back it up, then symlink
-    echo "  Backing up existing $filename → ${filename}.bak"
-    mv "$target" "${target}.bak"
-    ln -s "$cmd_file" "$target"
-    ((updated++))
-  else
-    # New install
-    ln -s "$cmd_file" "$target"
-    ((installed++))
-  fi
-done
+  done
+
+  echo "  $label — installed: $installed, updated: $updated, already current: $skipped"
+}
+
+echo "Installing agent-team..."
+install_dir "$SCRIPT_DIR/commands" "$HOME/.claude/commands" "Commands (slash commands)"
+install_dir "$SCRIPT_DIR/agents"   "$HOME/.claude/agents"   "Agents (subagents)"
 
 echo ""
-echo "Done! Installed: $installed, Updated: $updated, Already current: $skipped"
-echo ""
-echo "Available commands:"
-for cmd_file in "$COMMANDS_SRC"/*.md; do
-  filename="$(basename "$cmd_file" .md)"
-  echo "  /$filename"
+echo "Slash commands:"
+for cmd_file in "$SCRIPT_DIR/commands"/*.md; do
+  [ -e "$cmd_file" ] || continue
+  echo "  /$(basename "$cmd_file" .md)"
 done
+
+if [ -d "$SCRIPT_DIR/agents" ]; then
+  echo ""
+  echo "Subagents (invoked by other agents, via @name, or auto-delegated):"
+  for agent_file in "$SCRIPT_DIR/agents"/*.md; do
+    [ -e "$agent_file" ] || continue
+    echo "  @$(basename "$agent_file" .md)"
+  done
+fi
+
 echo ""
 echo "Use these in any Claude Code session."

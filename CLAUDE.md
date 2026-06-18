@@ -95,19 +95,23 @@ Default is Tier 1. Promotion to always-on context (Tier 2/3) must earn its place
 
 ## Project Structure
 
-- `commands/` — Slash command markdown files (the agents), each with YAML frontmatter
-- `install.sh` — Symlinks commands to `~/.claude/commands/` for global access
-- Each `.md` file in `commands/` becomes a `/command-name` in Claude Code
+- `commands/` — Slash command markdown files (the agents), each with YAML frontmatter. Each `.md` becomes a `/command-name` in Claude Code.
+- `agents/` — Subagent definitions (isolated-context workers, e.g. `a11y-auditor`). Each `.md` becomes an `@agent-name`, launchable via the Task tool or auto-delegated.
+- `install.sh` — Symlinks `commands/` → `~/.claude/commands/` and `agents/` → `~/.claude/agents/` for global access
 - `dev-docs/` — visible, committed workflow artifacts (per-project): `solutions/` (Tier 1 knowledge base), `plans/`, `brainstorms/`, `specs/`. Kept out of `docs/` so it never collides with a project's published docs site.
 - `.claude/rules/` — Tier 2 auto-loading guardrails (per-project, promoted by `/compound`). **Commit these** — gitignore only `.claude/settings.local.json`, never all of `.claude/`, or rules won't travel with the repo.
 
 ## Editing Agents
 
+There are two kinds of agent in this repo, split by **context management**, not capability:
+- **Slash commands** (`commands/*.md`) run *inline* in the main conversation. Use them for interactive workflows with approval gates and back-and-forth (`/brainstorm`, `/plan`, `/implement`, `/debug`, `/test`) and for orchestrators that coordinate workers (`/review`).
+- **Subagents** (`agents/*.md`) run in an *isolated context* and return only a summary. Use them for verbose, read-heavy work whose endpoint is a report and that needs no mid-run user input (`a11y-auditor`). A thin slash command can delegate to a subagent via the Task tool (see `/a11y`); interactive commands can offload just their heavy exploration to a read-only `Explore` subagent (see `/debug`, `/test`). Subagent frontmatter uses `name` + `description` (required) and `tools`/`disallowedTools` instead of `allowed-tools` (e.g. `a11y-auditor` sets `disallowedTools: Write, Edit` to stay read-only).
+
 When modifying agent commands:
 - **Every agent starts with YAML frontmatter** (see any file in `commands/`):
   - `description` — written as *what it does + when to use it* (a trigger, not a summary). This is what lets Claude Code surface and auto-select the agent, not just respond to a typed slash command. Keep it one or two sentences.
   - `argument-hint` — the shape of `$ARGUMENTS`, shown during autocomplete.
-  - `allowed-tools` — restrict tools where it adds safety (e.g. `/review` has no `Write`/`Edit` — it reviews, it never mutates). **Omit** this field for agents that need the full toolset or MCP/Playwright tools (`/implement`, `/test`, `/a11y`, `/debug`).
+  - `allowed-tools` — restrict tools where it adds safety (e.g. `/review` has no `Write`/`Edit` — it reviews, it never mutates; `/a11y` is a thin delegator restricted to just `Task`). **Omit** this field for agents that need the full toolset or MCP/Playwright tools (`/implement`, `/test`).
   - `model` — set `opus` for design/planning altitude (`/architect`, `/plan`, `/spec`), `haiku` for templated capture (`/compound`, `/docs`, `/scaffold`). **Omit** it elsewhere so the agent inherits the session model — don't override unless there's a clear reason.
 - Each agent has: a role description, a phased workflow, and behavioral guidelines
 - All agents use `$ARGUMENTS` for input from the user
