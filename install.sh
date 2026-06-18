@@ -10,7 +10,7 @@ install_dir() {
   [ -d "$src" ] || return 0
 
   mkdir -p "$dst"
-  local installed=0 updated=0 skipped=0
+  local installed=0 updated=0 skipped=0 pruned=0
 
   for file in "$src"/*.md; do
     [ -e "$file" ] || continue
@@ -33,7 +33,16 @@ install_dir() {
     fi
   done
 
-  echo "  $label — installed: $installed, updated: $updated, already current: $skipped"
+  # Prune symlinks pointing into $src whose target no longer exists (e.g. a
+  # command removed from the repo) so the install always mirrors the source.
+  for link in "$dst"/*.md; do
+    [ -L "$link" ] || continue
+    case "$(readlink "$link")" in
+      "$src"/*) [ -e "$link" ] || { rm "$link"; ((pruned++)); echo "  Pruned orphaned $(basename "$link")"; } ;;
+    esac
+  done
+
+  echo "  $label — installed: $installed, updated: $updated, already current: $skipped, pruned: $pruned"
 }
 
 echo "Installing agent-team..."
