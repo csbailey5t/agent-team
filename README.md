@@ -86,6 +86,22 @@ npm install -g typescript-language-server typescript
 pip install pyright
 ```
 
+### 4. Enable the SessionStart Hook (Optional)
+
+`./install.sh` symlinks `hooks/session-start.sh` to `~/.claude/hooks/` and makes it executable, but it does **not** touch your settings. To activate it, add this to `~/.claude/settings.json` (merge into any existing `hooks` block):
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      { "hooks": [ { "type": "command", "command": "$HOME/.claude/hooks/session-start.sh" } ] }
+    ]
+  }
+}
+```
+
+The hook **self-gates** — it only prints a reminder in projects that have a `dev-docs/` or `.claude/rules/` directory, so it's silent everywhere else. In agent-team projects it surfaces the workflow loop, how many learnings are captured, and a nudge to `/compound`. Remove the block to disable.
+
 ## Quick Start
 
 ### Starting a New Project

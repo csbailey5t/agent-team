@@ -40,6 +40,18 @@ echo "Installing agent-team..."
 install_dir "$SCRIPT_DIR/commands" "$HOME/.claude/commands" "Commands (slash commands)"
 install_dir "$SCRIPT_DIR/agents"   "$HOME/.claude/agents"   "Agents (subagents)"
 
+# Hook scripts: symlink + make executable. Registration in settings.json is a
+# separate one-time step (see README) so install.sh never edits your settings.
+if [ -d "$SCRIPT_DIR/hooks" ]; then
+  mkdir -p "$HOME/.claude/hooks"
+  for hook in "$SCRIPT_DIR/hooks"/*.sh; do
+    [ -e "$hook" ] || continue
+    chmod +x "$hook"
+    ln -sf "$hook" "$HOME/.claude/hooks/$(basename "$hook")"
+  done
+  echo "  Hooks — symlinked to ~/.claude/hooks/ (chmod +x)"
+fi
+
 echo ""
 echo "Slash commands:"
 for cmd_file in "$SCRIPT_DIR/commands"/*.md; do

@@ -60,7 +60,8 @@ Once you've identified the root cause:
 3. If there are multiple fix approaches, present options with tradeoffs
 4. Apply the fix after user approval
 5. Write or update a test that would have caught this bug
-6. Verify the fix by running the reproduction steps again
+6. **Prove it with a red-green check:** confirm the test fails *before* the fix (it should reproduce the bug), then passes *after*. Run both, just now — a test that never failed doesn't prove the fix works.
+7. Re-run the original reproduction steps and confirm the symptom is gone
 
 ### Phase 5: Report & Compound
 

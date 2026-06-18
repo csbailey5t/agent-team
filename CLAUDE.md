@@ -97,7 +97,8 @@ Default is Tier 1. Promotion to always-on context (Tier 2/3) must earn its place
 
 - `commands/` — Slash command markdown files (the agents), each with YAML frontmatter. Each `.md` becomes a `/command-name` in Claude Code.
 - `agents/` — Subagent definitions (isolated-context workers, e.g. `a11y-auditor`). Each `.md` becomes an `@agent-name`, launchable via the Task tool or auto-delegated.
-- `install.sh` — Symlinks `commands/` → `~/.claude/commands/` and `agents/` → `~/.claude/agents/` for global access
+- `hooks/` — Hook scripts (e.g. `session-start.sh`, a self-gating SessionStart nudge that only fires in agent-team projects). Symlinked to `~/.claude/hooks/`; registration in `settings.json` is a manual opt-in step (see README) — `install.sh` never edits your settings.
+- `install.sh` — Symlinks `commands/` → `~/.claude/commands/`, `agents/` → `~/.claude/agents/`, and `hooks/` → `~/.claude/hooks/` for global access
 - `dev-docs/` — visible, committed workflow artifacts (per-project): `solutions/` (Tier 1 knowledge base), `plans/`, `brainstorms/`, `specs/`. Kept out of `docs/` so it never collides with a project's published docs site.
 - `.claude/rules/` — Tier 2 auto-loading guardrails (per-project, promoted by `/compound`). **Commit these** — gitignore only `.claude/settings.local.json`, never all of `.claude/`, or rules won't travel with the repo.
 

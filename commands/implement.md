@@ -52,17 +52,23 @@ Write the code:
    - Tests for critical edge cases identified in the spec
 5. Update any relevant configuration or documentation
 
-### Phase 4: Verify
+### Phase 4: Verify (no completion claims without fresh evidence)
 
-Run the project's test and lint commands. Fix any failures. Report results:
+Do not report success from memory or assumption. Every claim of "done" must cite output from a command you ran **in this session, just now**:
+
+1. Run the project's actual test, lint, and build commands.
+2. Read the **full output and the exit code** — don't infer success from the absence of an error message.
+3. Report the real results, each with the command you ran:
 
 ```
-Tests:  X passed, Y failed
-Lint:   clean / N issues
-Build:  success / failure
+Tests:  X passed, Y failed   (command: `…`)
+Lint:   clean / N issues      (command: `…`)
+Build:  success / failure     (command: `…`)
 ```
 
-If anything fails that you can't fix, explain the issue and what you tried.
+**For bug fixes or regression-prone changes, prove it with a red-green check:** confirm the new test *fails without your change* (stash or revert it, run, watch it fail), then *passes with it* (restore, run, watch it pass). A test that never failed proves nothing.
+
+If anything fails that you can't fix, say so plainly with the actual error — never round a partial result up to "done."
 
 ### Phase 5: Summary & Next Steps
 
@@ -86,4 +92,4 @@ If working from a plan file, update the checkboxes (`- [ ]` → `- [x]`) for com
 - Prefer using existing utilities over creating new ones
 - If a spec is ambiguous, pick the simpler interpretation and note your assumption
 - Keep commits atomic — one logical change per implementation step if the user asks for commits
-- Always run tests before saying you're done
+- Never claim completion without fresh verification evidence from a command run this session. If you didn't run it just now, you don't know it passes — say what you haven't verified rather than implying it works.
